@@ -70,6 +70,8 @@ public class AddActivity extends AppCompatActivity {
                     note.setEnabled(false);
                     date.setEnabled(false);
                     dbHelper.update(getIntent().getExtras().getString("id"), title.getText().toString(), note.getText().toString(), date.getText().toString());
+                    Intent i = new Intent(AddActivity.this, TodoActivity.class);
+                    AddActivity.this.startActivity(i);
                 } else {
                     dbHelper.insert(title.getText().toString(), note.getText().toString(), date.getText().toString());
                     AddActivity.this.startActivity(new Intent(AddActivity.this, TodoActivity.class));
