@@ -5,23 +5,34 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import static android.R.attr.name;
+import static com.honghaisen.todo.R.id.date;
+import static com.honghaisen.todo.R.id.note;
 
 /**
  * Created by hison7463 on 6/15/16.
  */
 public class DBHelper extends SQLiteOpenHelper {
 
+    private final static String TAG = DBHelper.class.getSimpleName();
+
     public DBHelper(Context context) {
-        super(context, "Lists.db", null, 2);
+        super(context, "Lists.db", null, 4);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE Lists (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "title text NOT NULL," +
+                "year text NOT NULL," +
+                "month text NOT NULL," +
+                "day text NOT NULL," +
                 "note text," +
-                "date text)");
+                "priority text NOT NULL," +
+                "status text NOT NULL)");
     }
 
     @Override
@@ -30,14 +41,20 @@ public class DBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insert(String title, String note, String date) {
+    public boolean insert(String title, String year, String month, String day, String note, String priority, String status) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contents = new ContentValues();
         contents.put("title", title);
+        contents.put("year", year);
+        contents.put("month", month);
+        contents.put("day", day);
         contents.put("note", note);
-        contents.put("date", date);
+        contents.put("priority", priority);
+        contents.put("status", status);
         long before = db.rawQuery("SELECT * FROM Lists", null).getCount();
         long after = db.insert("Lists", null, contents);
+
+        Log.d(TAG, before + ", " + after);
 
         if(after - before == 1) {
             return true;
@@ -47,7 +64,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Cursor getItem(String id) {
         SQLiteDatabase db = getReadableDatabase();
-        return db.rawQuery("SELECT * FROM Lists WHERE id = ?", new String[]{id});
+        return db.rawQuery("SELECT * FROM Lists WHERE _id = ?", new String[]{id});
     }
 
     public long getLastId() {
@@ -62,17 +79,21 @@ public class DBHelper extends SQLiteOpenHelper {
         return db.rawQuery("SELECT * FROM Lists", null);
     }
 
-    public void update(String id, String title, String note, String date) {
+    public void update(String id, String title, String year, String month, String day, String note, String priority, String status) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues contents = new ContentValues();
         contents.put("title", title);
+        contents.put("year", year);
+        contents.put("month", month);
+        contents.put("day", day);
         contents.put("note", note);
-        contents.put("date", date);
-        db.update("Lists", contents, "id = ?", new String[]{id});
+        contents.put("priority", priority);
+        contents.put("status", status);
+        db.update("Lists", contents, "_id = ?", new String[]{id});
     }
 
     public void delete(String id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete("Lists", "id = ?", new String[]{id});
+        db.delete("Lists", "_id = ?", new String[]{id});
     }
 }
