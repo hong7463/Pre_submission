@@ -4,7 +4,7 @@
 
 Submitted by: **Haisen Hong**
 
-Time spent: **6** hours spent in total
+Time spent: **30** hours spent in total
 
 ## User Stories
 
